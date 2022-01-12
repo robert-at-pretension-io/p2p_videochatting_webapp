@@ -2,6 +2,9 @@
 @import "../app.css";
 </style>
 
+<script context="module">
+    </script>
+
 <nav class="navbar is-light"  aria-label="main navigation">
     <div class="navbar-brand">
       <a href="/" class="icon is-large has-text-info">

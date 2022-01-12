@@ -1,3 +1,5 @@
+
+
 <section class="hero is-small is-light">
 	<div class="hero-body">
 		<p class="title">Welcome!</p>
@@ -22,7 +24,6 @@
                             <span class="tag is-dark">
                                 Github <span class="icon">  <i class="fab fa-github" /></span>
                             </span>
-                            
                             <span class="tag is-dark">
                                 Linkedin <span class="icon"><i class="fab fa-linkedin" /></span>
                             </span>
@@ -35,8 +36,7 @@
     
                         </div>
                     </div>
-
-                    Alternatively, you can sign up using a standard email <span class="icon"><i class="fas fa-envelope" /></span> and password.
+                    Alternatively, you can sign up using a standard email <span class="icon"><i class="fas fa-envelope" /></span> and password <span class="icon"><i class="fas fa-key" /></span>.
                     
 				</div>
 			</article>
