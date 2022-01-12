@@ -22,12 +22,15 @@
                             <span class="tag is-dark">
                                 Github <span class="icon">  <i class="fab fa-github" /></span>
                             </span>
-                            <span class="tag is-dark">
-                                Google <span class="icon"><i class="fab fa-google-plus-square" /></span>
-                            </span>
+                            
                             <span class="tag is-dark">
                                 Linkedin <span class="icon"><i class="fab fa-linkedin" /></span>
                             </span>
+                            <span class="tag is-dark">
+                                Discord <span class="icon"><i class="fab fa-discord" /></span>
+                            </span>
+                            <span class="tag is-dark">
+                                Google <span class="icon"><i class="fab fa-google" /></span>
     
     
                         </div>
