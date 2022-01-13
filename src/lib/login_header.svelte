@@ -1,11 +1,24 @@
 <script context="module">
-	export async function load({ session }) {
-		return {
+	export async function load({ session, locals }) {
+
+    console.log("Loading session from login_header.svelte: " + JSON.stringify(session, null, 2));
+
+		if (session !== undefined) {
+    return {
 			props: {
 				user: session.user
 			}
 		};
-	}
+  }
+  else {
+    return {
+      props: {
+        user: null
+      }
+    };
+
+  }
+}
 </script>
 
 <script>

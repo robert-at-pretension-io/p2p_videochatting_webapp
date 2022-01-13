@@ -1,24 +1,8 @@
+
 <script context="module">
-	export async function load({ session, locals }) {
-
-    console.log("Loading session from index.svelte: " + JSON.stringify(session, null, 2));
-    console.log("Loading locals from index.svelte: " + JSON.stringify(locals, null, 2));
-
-		if (session !== undefined) {
-    return {
-			props: {
-				user: session.user
-			}
-		};
-  }
-  else {
-    return {
-      props: {
-        user: null
-      }
-    };
-
-  }
+  import { load_user_data } from "$lib/load_user_data";
+	export async function load({ session }) {
+    return load_user_data(session, "/index.svelte");
 }
 </script>
 

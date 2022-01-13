@@ -1,11 +1,9 @@
-export async function get({session, locals}) {
-    session  = "";
-    locals = "";
+export function get({ url, headers }) {
+    console.log("Logout Endpoint: " + JSON.stringify(url, null, 2));
     return {
-        status: 302,
+        status: 301,
         headers: {
             location: '/'
         }
     };
-
 }

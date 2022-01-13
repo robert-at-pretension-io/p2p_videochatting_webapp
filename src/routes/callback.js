@@ -4,7 +4,7 @@ const baseURL = process.env["AUTH0_BASE_URL"];
 const client_id = process.env['CLIENT_ID'];
 const client_secret = process.env['CLIENT_SECRET'];
 
-export async function get({params, url, locals}) {
+export async function get({url, locals}) {
     let my_url = new URL(url);
     let code = my_url.searchParams.get('code');
     let redirect_uri = url.origin.replace(/\/login$/, '');

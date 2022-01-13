@@ -4,8 +4,16 @@
 @import "../app.css";
 </style>
 
+<script context="module">
+  import { load_user_data } from "$lib/load_user_data";
+	export async function load({ session }) {
+    return load_user_data(session, "__layout.svelte");
+}
+</script>
+
 <script>
     import LoginHeader from "$lib/login_header.svelte";
+    export let user;
     
 </script>
 
@@ -58,7 +66,7 @@
         </button>
       </div>
 
-      <LoginHeader/>
+      <LoginHeader {user}/>
     </div>
   </nav>
 
