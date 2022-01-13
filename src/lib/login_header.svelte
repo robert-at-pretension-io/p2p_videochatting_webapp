@@ -9,13 +9,13 @@
 </script>
 
 <script>
-	export let user = undefined;
+	export let user;
 </script>
 
 <div class="navbar-item navbar-end">
 	<div class="buttons">
 		{#if user}
-			<a class="button is-info is-outlined" href="/logout">
+			<a class="button is-info is-outlined" rel="external" href="/logout">
 				<span class="icon">
 					<i class="fa fa-sign-out" />
 				</span>
@@ -30,7 +30,7 @@
 				</span>
 				<span>Login</span>
 			</a>
-			<a class="button is-info is-outlined" href="/register">
+			<a class="button is-info is-outlined" rel="external" href="/register">
 				<span class="icon">
 					<i class="fa fa-user-plus" />
 				</span>

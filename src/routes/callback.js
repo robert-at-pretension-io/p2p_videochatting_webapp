@@ -1,14 +1,16 @@
-import fetch from 'node-fetch';
+// import fetch from 'node-fetch';
 
 const baseURL = 'https://dev-ggk93vhy.us.auth0.com';
 
 let client_id = process.env['CLIENT_ID'];
 let client_secret = process.env['CLIENT_SECRET'];
 
-export async function get({params, url}) {
+export async function get({params, url, locals}) {
     let my_url = new URL(url);
     let code = my_url.searchParams.get('code');
     let redirect_uri = url.origin.replace(/\/login$/, '');
+
+    
 
     let response = await getToken(code, redirect_uri);
     let json = await response.json();
@@ -17,8 +19,13 @@ export async function get({params, url}) {
     let user = await getUser(access_token);
     let user_json = await user.json();
 
+    locals.user = JSON.stringify(user_json);
+
     return {
-        body: user_json
+        status: 302,
+        headers: {
+            location: '/'
+        }
     };
 
 }

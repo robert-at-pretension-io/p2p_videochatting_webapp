@@ -1,11 +1,20 @@
 <script context="module">
   export async function load({ session }) {
-    
-    return {
+    if (session !== undefined) {
+        return {
       props: {
-        user: session.user,
+        user: JSON.parse(session.user || '{}'),
       },
     };
+    }
+    else {
+        return {
+      props: {
+        user: null,
+      },
+    };
+    }
+
   }
 
 </script>

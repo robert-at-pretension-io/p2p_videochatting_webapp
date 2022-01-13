@@ -6,6 +6,7 @@
 
 <script>
     import LoginHeader from "$lib/login_header.svelte";
+    
 </script>
 
 <nav class="navbar is-light"  aria-label="main navigation">
