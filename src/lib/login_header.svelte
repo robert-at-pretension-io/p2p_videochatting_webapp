@@ -28,7 +28,7 @@
 <div class="navbar-item navbar-end">
 	<div class="buttons">
 		{#if user}
-			<a class="button is-info is-outlined" rel="external" href="/logout">
+			<a class="button is-light is-outlined is-fullwidth" rel="external" href="/logout">
 				<span class="icon">
 					<i class="fa fa-sign-out" />
 				</span>
@@ -43,7 +43,7 @@
 				</span>
 				<span>Login</span>
 			</a>
-			<a class="button is-info is-outlined" rel="external" href="/register">
+			<a class="button is-warning is-outlined" rel="external" href="/login?screen_hint=signup">
 				<span class="icon">
 					<i class="fa fa-user-plus" />
 				</span>
