@@ -1,9 +1,12 @@
+
+
 <style global>
 @import "../app.css";
 </style>
 
-<script context="module">
-    </script>
+<script>
+    import LoginHeader from "$lib/login_header.svelte";
+</script>
 
 <nav class="navbar is-light"  aria-label="main navigation">
     <div class="navbar-brand">
@@ -53,9 +56,8 @@
           </span>
         </button>
       </div>
-  
-  
-      <app-login-header></app-login-header>
+
+      <LoginHeader/>
     </div>
   </nav>
 

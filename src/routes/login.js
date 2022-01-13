@@ -1,17 +1,14 @@
-export async function get({ params, request, response }) {
-    // If a user is logged in, redirect to the homepage
-    if (request.session.user) {
+export async function get({   url }) {
+        let redirect_uri = url.origin.replace(/\/login$/, '') + '/callback/';
+        let response_type = 'code';
+        let scope = 'openid profile email';
         return {
-            status: 302,
-            location: '/'
+            status: 301,
+            headers: {
+                location: `https://dev-ggk93vhy.us.auth0.com/authorize?response_type=${response_type}&client_id=euhEPspBJreE2mcTuCujf9zuChOnngl1&redirect_uri=${redirect_uri}&scope=${scope}`
+            }
         };
     }
-    
-    // If the user is not logged in, render the login page
-    else {
-        return {
-            status: 302,
-            location: "https://dev-ggk93vhy.us.auth0.com/authorize?response_type=code|token&            client_id=euhEPspBJreE2mcTuCujf9zuChOnngl1&connection=CONNECTION&redirect_uri=http://localhost:3000/&      state=STATE"
-        };
-    }   
-    }
+
+
+

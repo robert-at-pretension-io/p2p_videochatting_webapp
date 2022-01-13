@@ -1,43 +1,41 @@
+<script context="module">
+	export async function load({ session }) {
+		return {
+			props: {
+				user: session.user
+			}
+		};
+	}
+</script>
+
 <script>
-
-	// either with async/await
-    import { Auth0Client } from '@auth0/auth0-spa-js';
-
-const auth0 = new Auth0Client({
-  domain: 'dev-ggk93vhy.us.auth0.com',
-  client_id: 'euhEPspBJreE2mcTuCujf9zuChOnngl1'
-});
-
-    async function login() {
-        await auth0.loginWithRedirect({
-            redirect_uri: window.location.origin
-        });
-    }
-
+	export let user = undefined;
 </script>
 
 <div class="navbar-item navbar-end">
-	<div class="buttons ">
-		<a
-			*ngIf="(auth.isAuthenticated$ | async) === false"
-			class="button is-primary is-outlined"
-			(click)="loginWithRedirect()"
-		>
-			Login
-		</a>
-		<a
-			*ngIf="(auth.isAuthenticated$ | async) === false"
-			class="button is-info is-outlined"
-			(click)="signUpWithRedirect()"
-		>
-			Register
-		</a>
-		<a
-			*ngIf="(auth.isAuthenticated$ | async)"
-			class="button is-info is-outlined"
-			(click)="logout()"
-		>
-			Logout
-		</a>
+	<div class="buttons">
+		{#if user}
+			<a class="button is-info is-outlined" href="/logout">
+				<span class="icon">
+					<i class="fa fa-sign-out" />
+				</span>
+				<span>Logout</span>
+			</a>
+		{/if}
+
+		{#if !user}
+			<a class="button is-primary is-outlined" rel="external" href="/login">
+				<span class="icon">
+					<i class="fa fa-sign-in" />
+				</span>
+				<span>Login</span>
+			</a>
+			<a class="button is-info is-outlined" href="/register">
+				<span class="icon">
+					<i class="fa fa-user-plus" />
+				</span>
+				<span>Register</span>
+			</a>
+		{/if}
 	</div>
 </div>

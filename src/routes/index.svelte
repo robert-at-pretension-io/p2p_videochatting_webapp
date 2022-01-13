@@ -1,11 +1,40 @@
+<script context="module">
+  export async function load({ session }) {
+    
+    return {
+      props: {
+        user: session.user,
+      },
+    };
+  }
 
+</script>
 
+<script>export let user;</script>
+
+{#if !user}
 <section class="hero is-small is-light">
 	<div class="hero-body">
 		<p class="title">Welcome!</p>
 		<p class="subtitle">This is an audio/video chatting site to help you find kindred spirits.</p>
 	</div>
 </section>
+{/if}
+
+
+{#if user}
+<section class="hero is-small is-light">
+	<div class="hero-body">
+        <p class="title">Welcome back, {user.name}!</p>
+        <div class="card">
+            <div class="card-content">
+                <p class="title">Your info</p>
+                <p class="subtitle">{user}</p>
+            </div>
+        </div>
+	</div>
+</section>
+{/if}
 
 <section class="section">
 	<h1 class="title">How's it work?</h1>
