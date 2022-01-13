@@ -1,9 +1,8 @@
 // import fetch from 'node-fetch';
 
-const baseURL = 'https://dev-ggk93vhy.us.auth0.com';
-
-let client_id = process.env['CLIENT_ID'];
-let client_secret = process.env['CLIENT_SECRET'];
+const baseURL = process.env["AUTH0_BASE_URL"];
+const client_id = process.env['CLIENT_ID'];
+const client_secret = process.env['CLIENT_SECRET'];
 
 export async function get({params, url, locals}) {
     let my_url = new URL(url);
@@ -19,17 +18,16 @@ export async function get({params, url, locals}) {
     let user = await getUser(access_token);
     let user_json = await user.json();
 
-    locals.user = JSON.stringify(user_json);
+    locals.user = user_json;
+
+    console.log("In the callback enpoint: " + JSON.stringify(locals, null, 2));
 
     return {
-        body: {
-            user: user_json,
-            access_token: access_token,
-            code: code,
-            redirect_uri: redirect_uri,
-            client_id: client_id,
-            client_secret: client_secret
+        status: 301,
+        headers: {
+            location: '/'
         }
+
     };
 
 }

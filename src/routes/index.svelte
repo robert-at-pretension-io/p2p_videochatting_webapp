@@ -1,22 +1,25 @@
 <script context="module">
-  export async function load({ session }) {
-    if (session !== undefined) {
-        return {
+	export async function load({ session, locals }) {
+
+    console.log("Loading session from index.svelte: " + JSON.stringify(session, null, 2));
+    console.log("Loading locals from index.svelte: " + JSON.stringify(locals, null, 2));
+
+		if (session !== undefined) {
+    return {
+			props: {
+				user: session.user
+			}
+		};
+  }
+  else {
+    return {
       props: {
-        user: JSON.parse(session.user || '{}'),
-      },
+        user: null
+      }
     };
-    }
-    else {
-        return {
-      props: {
-        user: null,
-      },
-    };
-    }
 
   }
-
+}
 </script>
 
 <script>export let user;</script>
@@ -38,7 +41,7 @@
         <div class="card">
             <div class="card-content">
                 <p class="title">Your info</p>
-                <p class="subtitle">{user}</p>
+                <p class="subtitle">{JSON.stringify(user)}</p>
             </div>
         </div>
 	</div>
