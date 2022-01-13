@@ -34,7 +34,7 @@
 {#if user}
 <section class="hero is-small is-light">
 	<div class="hero-body">
-        <p class="title">Welcome back, {user.name}!</p>
+        <p class="title">Welcome back!</p>
         <div class="card">
             <div class="card-content">
                 <p class="title">Your info</p>

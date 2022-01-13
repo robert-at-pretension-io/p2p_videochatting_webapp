@@ -22,9 +22,13 @@ export async function get({params, url, locals}) {
     locals.user = JSON.stringify(user_json);
 
     return {
-        status: 302,
-        headers: {
-            location: '/'
+        body: {
+            user: user_json,
+            access_token: access_token,
+            code: code,
+            redirect_uri: redirect_uri,
+            client_id: client_id,
+            client_secret: client_secret
         }
     };
 
