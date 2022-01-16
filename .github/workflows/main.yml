@@ -1,0 +1,48 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      #- uses: actions/checkout@v2
+
+      - name: Deploy to Cloudflare Workers with Wrangler
+        uses: cloudflare/wrangler-action@1.2.0
+        with:    # (Legacy) Your Cloudflare API Key
+          # apiKey: # optional
+          # Your Cloudflare API Token
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # (Legacy) Your Cloudflare Email
+          # email: # optional
+          # The environment you'd like to publish your Workers project to - must be defined in wrangler.toml
+          # environment: # optional
+          # The relative path which Wrangler commands should be run from
+          workingDirectory: cloudflare_workers
+          # The version of Wrangler you'd like to use to publish your Workers project
+          # wranglerVersion: # optional
+          # A new line deliminated string of environment variable names that should be configured as Worker secrets
+          secrets: |
+            SECRET1
+            SECRET2
+        env:
+          SECRET1: ${{ secrets.SECRET1 }}
+          SECRET2: ${{ secrets.SECRET2 }}
