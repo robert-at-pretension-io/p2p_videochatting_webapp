@@ -10,7 +10,7 @@
   import { createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
 
-  export const remote_id = writable({});
+  export const remote_id = writable("");
 
 
 
@@ -68,13 +68,14 @@
         
         );
 				// media calls to others
-				peer.on('call', function (call) {
+				peer.on('call', async function (call) {
 					
 						call.answer(local_stream); // Answer the call with an A/V stream.
-						call.on('stream', function (remoteStream) {
+						call.on('stream', async function (remoteStream) {
 
               remote_video_element.srcObject = remoteStream;
-              remote_video_element.play();
+
+              await remote_video_element.play();
               remote_stream = remoteStream;
             });
 					
@@ -93,9 +94,10 @@
         if (local_stream)
         {
           var call = peer.call(peer_id, local_stream);
-  call.on('stream', function(remoteStream) {
+  call.on('stream', async function(remoteStream) {
     remote_video_element.srcObject = remoteStream;
-              remote_video_element.play();
+
+              await remote_video_element.play();
               remote_stream = remoteStream;
   });
         }
@@ -226,6 +228,56 @@
 			</article>
 		</section>
 	{/if}
+
+	<section class="section">
+
+    <div class="columns">
+      <div class="column">
+        <div class="box">
+          <div class="content">
+            <p class="title">Your Video</p>
+
+
+            <video bind:this={local_video_element} class="column is-full is-dark">
+
+              <track kind="captions" />
+            </video>
+            <div class="field">
+                
+              <div class="control">
+                <label class="label">Peer id
+                <input class="input" type="text" value="{local_id}" readonly />
+              </label>
+              </div>
+            
+              <small>(Send this peer id to your chatting partner. It is your identifier.)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="box">
+          <div class="content">
+            <p class="title">Remote Video</p>
+
+            <video bind:this={remote_video_element} class="column is-full is-dark">
+              <track kind="captions" />
+            </video>
+            <div class="field">
+                
+              <div class="control">
+                <label class="label">Remote ID
+                <input class="input" type="text" value="{$remote_id }" readonly />
+              </label>
+              </div>
+          </div>
+        </div>
+      </div>
+			
+
+			
+		</div>
+	</section>
   <section class="section">
     <div class="card">
       <div class="card-content">
@@ -242,65 +294,5 @@
       </div>
     </div>
   </section>
-	<section class="section">
-		<h1 class="title">Video Chat</h1>
-    <div class="card">
-      <div class="card-content">
-        <div class="content">
-          <div class="columns">
-            <div class="column">
-              <div class="field">
-                
-                <div class="control">
-                  <label class="label">Peer id
-                  <input class="input" type="text" value="{local_id}" readonly />
-                </label>
-                </div>
-              
-                
-              </div>
-              <small>(Send this peer id to your chatting partner. It is your identifier.)</small>
-            </div>
-            <div class="column">
-              <div class="field">
-                
-                <div class="control">
-                  <label class="label">Remote ID
-                  <input class="input" type="text" value="{$remote_id}" readonly />
-                </label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    <div class="columns">
-      <div class="column">
-        <div class="box">
-          <div class="content">
-            <p class="title">Your Video</p>
-            <video bind:this={local_video_element} class="column is-full is-dark">
-
-              <track kind="captions" />
-            </video>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="box">
-          <div class="content">
-            <p class="title">Remote Video</p>
-            <video bind:this={remote_video_element} class="column is-full is-dark">
-              <track kind="captions" />
-            </video>
-          </div>
-        </div>
-      </div>
-			
-
-			
-		</div>
-	</section>
 
 {/if}
