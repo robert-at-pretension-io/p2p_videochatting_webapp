@@ -16,7 +16,6 @@
 			enable source maps by default.
 			*/
 		"sourceMap": true,
-		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"baseUrl": ".",
@@ -25,7 +24,11 @@
 		"paths": {
 			"$lib": ["src/lib"],
 			"$lib/*": ["src/lib/*"]
-		}
+		},
+		/** added to fix peerjs problem */
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true
+
 	},
 	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"]
 }
