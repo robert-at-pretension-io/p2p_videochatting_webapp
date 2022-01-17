@@ -58,7 +58,7 @@ async function create_ably_channel(user_identifier) {
     await channel.publish('message', {
         text: `${user_identifier} has joined the server.`
     });
-    return channel;
+    
 }
 
 
