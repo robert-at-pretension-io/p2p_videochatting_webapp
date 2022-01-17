@@ -10,8 +10,7 @@
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	export const remote_id = writable('');
-  import * as Ably from 'ably/promises';
-
+  import * as Ably from "ably";
 
 	var local_id;
 	var local_video_element;

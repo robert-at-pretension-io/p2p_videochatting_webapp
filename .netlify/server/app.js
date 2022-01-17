@@ -42,7 +42,8 @@ __export(exports, {
   App: () => App,
   override: () => override
 });
-var import_index_2dc61825 = __toModule(require("./chunks/index-2dc61825.js"));
+var import_index_08869495 = __toModule(require("./chunks/index-08869495.js"));
+var import_cookie = __toModule(require("cookie"));
 var __accessCheck = (obj, member, msg) => {
   if (!member.has(obj))
     throw TypeError("Cannot " + msg);
@@ -1383,14 +1384,14 @@ const css = {
   code: "#svelte-announcer.svelte-1j55zn5{position:absolute;left:0;top:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap;width:1px;height:1px}",
   map: null
 };
-const Root = (0, import_index_2dc61825.c)(($$result, $$props, $$bindings, slots) => {
+const Root = (0, import_index_08869495.c)(($$result, $$props, $$bindings, slots) => {
   let { stores } = $$props;
   let { page } = $$props;
   let { components } = $$props;
   let { props_0 = null } = $$props;
   let { props_1 = null } = $$props;
   let { props_2 = null } = $$props;
-  (0, import_index_2dc61825.s)("__svelte__", stores);
+  (0, import_index_08869495.s)("__svelte__", stores);
   afterUpdate(stores.page.notify);
   if ($$props.stores === void 0 && $$bindings.stores && stores !== void 0)
     $$bindings.stores(stores);
@@ -1411,11 +1412,11 @@ const Root = (0, import_index_2dc61825.c)(($$result, $$props, $$bindings, slots)
   return `
 
 
-${components[1] ? `${(0, import_index_2dc61825.v)(components[0] || import_index_2dc61825.m, "svelte:component").$$render($$result, Object.assign(props_0 || {}), {}, {
-    default: () => `${components[2] ? `${(0, import_index_2dc61825.v)(components[1] || import_index_2dc61825.m, "svelte:component").$$render($$result, Object.assign(props_1 || {}), {}, {
-      default: () => `${(0, import_index_2dc61825.v)(components[2] || import_index_2dc61825.m, "svelte:component").$$render($$result, Object.assign(props_2 || {}), {}, {})}`
-    })}` : `${(0, import_index_2dc61825.v)(components[1] || import_index_2dc61825.m, "svelte:component").$$render($$result, Object.assign(props_1 || {}), {}, {})}`}`
-  })}` : `${(0, import_index_2dc61825.v)(components[0] || import_index_2dc61825.m, "svelte:component").$$render($$result, Object.assign(props_0 || {}), {}, {})}`}
+${components[1] ? `${(0, import_index_08869495.v)(components[0] || import_index_08869495.m, "svelte:component").$$render($$result, Object.assign(props_0 || {}), {}, {
+    default: () => `${components[2] ? `${(0, import_index_08869495.v)(components[1] || import_index_08869495.m, "svelte:component").$$render($$result, Object.assign(props_1 || {}), {}, {
+      default: () => `${(0, import_index_08869495.v)(components[2] || import_index_08869495.m, "svelte:component").$$render($$result, Object.assign(props_2 || {}), {}, {})}`
+    })}` : `${(0, import_index_08869495.v)(components[1] || import_index_08869495.m, "svelte:component").$$render($$result, Object.assign(props_1 || {}), {}, {})}`}`
+  })}` : `${(0, import_index_08869495.v)(components[0] || import_index_08869495.m, "svelte:component").$$render($$result, Object.assign(props_0 || {}), {}, {})}`}
 
 ${``}`;
 });
@@ -1427,9 +1428,37 @@ function set_paths(paths) {
 }
 function set_prerendering(value) {
 }
+async function handle({ request, resolve: resolve2 }) {
+  var cookies = import_cookie.default.parse(request.headers.cookie || "");
+  if (request.url.pathname === "/logout") {
+    console.log("attemtping to logout");
+    cookies = {};
+    request.locals = {};
+  }
+  console.log("cookies before resolve function: ", JSON.stringify(cookies, null, 2));
+  try {
+    request.locals = JSON.parse(cookies.data);
+  } catch (e) {
+    console.log("error parsing cookie user");
+    request.locals = {};
+  }
+  console.log("before resolve function: " + JSON.stringify(request.locals, null, 2));
+  const response = await resolve2(request);
+  console.log("after resolve function: " + JSON.stringify(request.locals, null, 2));
+  response.headers["set-cookie"] = `data=${JSON.stringify(request.locals) || ""}; Path=/; HttpOnly`;
+  return response;
+}
+async function getSession(request) {
+  console.log("getSession function: " + JSON.stringify(request, null, 2));
+  return request.locals ? {
+    data: request.locals
+  } : { data: {} };
+}
 var user_hooks = /* @__PURE__ */ Object.freeze({
   __proto__: null,
-  [Symbol.toStringTag]: "Module"
+  [Symbol.toStringTag]: "Module",
+  handle,
+  getSession
 });
 const template = ({ head, body, assets: assets2 }) => '<!DOCTYPE html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<meta name="description" content="" />\n		<link rel="icon" href="' + assets2 + '/favicon.png" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		' + head + '\n	</head>\n	<body>\n		<div id="svelte">' + body + "</div>\n	</body>\n</html>\n";
 let read = null;

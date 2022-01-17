@@ -4,18 +4,42 @@
     "src": ".svelte-kit/build/app.js",
     "isEntry": true,
     "imports": [
-      "_index-2dc61825.js"
+      "_index-08869495.js"
     ],
     "css": [
       "assets/app-6009617f.css"
     ]
   },
-  ".svelte-kit/build/components/layout.svelte": {
-    "file": "entries/pages/layout.svelte.js",
-    "src": ".svelte-kit/build/components/layout.svelte",
+  "src/routes/ably_auth.js": {
+    "file": "entries/endpoints/ably_auth.js",
+    "src": "src/routes/ably_auth.js",
+    "isEntry": true
+  },
+  "src/routes/callback.js": {
+    "file": "entries/endpoints/callback.js",
+    "src": "src/routes/callback.js",
+    "isEntry": true
+  },
+  "src/routes/logout.js": {
+    "file": "entries/endpoints/logout.js",
+    "src": "src/routes/logout.js",
+    "isEntry": true
+  },
+  "src/routes/login.js": {
+    "file": "entries/endpoints/login.js",
+    "src": "src/routes/login.js",
+    "isEntry": true
+  },
+  "src/routes/__layout.svelte": {
+    "file": "entries/pages/__layout.svelte.js",
+    "src": "src/routes/__layout.svelte",
     "isEntry": true,
     "imports": [
-      "_index-2dc61825.js"
+      "_index-08869495.js",
+      "_load_user_data-ba355a80.js"
+    ],
+    "css": [
+      "assets/entries/pages/__layout.svelte-d2fcb485.css"
     ]
   },
   ".svelte-kit/build/components/error.svelte": {
@@ -23,7 +47,7 @@
     "src": ".svelte-kit/build/components/error.svelte",
     "isEntry": true,
     "imports": [
-      "_index-2dc61825.js"
+      "_index-08869495.js"
     ]
   },
   "src/routes/index.svelte": {
@@ -31,18 +55,23 @@
     "src": "src/routes/index.svelte",
     "isEntry": true,
     "imports": [
-      "_index-2dc61825.js"
+      "_index-08869495.js",
+      "_load_user_data-ba355a80.js"
     ]
   },
-  "src/routes/test.svelte": {
-    "file": "entries/pages/test.svelte.js",
-    "src": "src/routes/test.svelte",
+  "src/routes/account.svelte": {
+    "file": "entries/pages/account.svelte.js",
+    "src": "src/routes/account.svelte",
     "isEntry": true,
     "imports": [
-      "_index-2dc61825.js"
+      "_index-08869495.js",
+      "_load_user_data-ba355a80.js"
     ]
   },
-  "_index-2dc61825.js": {
-    "file": "chunks/index-2dc61825.js"
+  "_index-08869495.js": {
+    "file": "chunks/index-08869495.js"
+  },
+  "_load_user_data-ba355a80.js": {
+    "file": "chunks/load_user_data-ba355a80.js"
   }
 }
