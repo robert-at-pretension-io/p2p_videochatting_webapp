@@ -14,9 +14,6 @@ export async function get({url, params,locals}) {
     let tokenParams = {
         rnd: rnd,
         ttl: 3600000,
-        capabilities: {
-            subscribe: true,
-        },
 
         
     };
