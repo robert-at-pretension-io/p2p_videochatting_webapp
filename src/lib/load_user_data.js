@@ -4,13 +4,14 @@ export function load_user_data(session, file_location) {
 	if (session !== undefined) {
 		return {
 			props: {
-				user: session.user
+				...session.data
 			}
 		};
 	} else {
 		return {
 			props: {
-				user: null
+				user: null,
+                ably_token: null
 			}
 		};
 	}

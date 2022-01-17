@@ -7,46 +7,37 @@
 
 <script>
 	import { browser } from '$app/env';
-  import { createEventDispatcher } from 'svelte';
-  import { writable } from 'svelte/store';
-
-  export const remote_id = writable("");
-
+	import { createEventDispatcher, onMount } from 'svelte';
+	import { writable } from 'svelte/store';
+	export const remote_id = writable('');
+  import * as Ably from 'ably/promises';
 
 
 	var local_id;
 	var local_video_element;
-  var local_stream;
-
+	var local_stream;
 	var Peer;
 	var remote_video_element;
-  var remote_stream;
+	var remote_stream;
 	var error;
-	import { onMount } from 'svelte';
+
 	if (browser) {
 		onMount(async () => {
-
 			// Get local stream, show it in the local video element and add it to be sent
 			async function getMedia(constraints) {
 				try {
-					
-
-					local_stream =  await navigator.mediaDevices.getUserMedia(constraints);
-          local_video_element.srcObject = local_stream;
-          local_video_element.play();
-          return local_stream;
-
+					local_stream = await navigator.mediaDevices.getUserMedia(constraints);
+					local_video_element.srcObject = local_stream;
+					local_video_element.play();
+					return local_stream;
 				} catch (err) {
 					error = err;
 				}
 			}
 
-      local_stream = await getMedia({ video: true, audio: true });
-      
-      // This function is called when the user clicks the call button
+			local_stream = await getMedia({ video: true, audio: true });
 
-
-
+			// This function is called when the user clicks the call button
 
 			if (local_id) {
 				return;
@@ -64,55 +55,108 @@
 					conn.on('data', function (data) {
 						console.log(data);
 					});
-				}
-        
-        );
+				});
 				// media calls to others
 				peer.on('call', async function (call) {
-					
-						call.answer(local_stream); // Answer the call with an A/V stream.
-						call.on('stream', async function (remoteStream) {
+					call.answer(local_stream); // Answer the call with an A/V stream.
+					call.on('stream', async function (remoteStream) {
+						remote_video_element.srcObject = remoteStream;
 
-              remote_video_element.srcObject = remoteStream;
-
-              await remote_video_element.play();
-              remote_stream = remoteStream;
-            });
-					
+						await remote_video_element.play();
+						remote_stream = remoteStream;
+					});
 				});
-        remote_id.subscribe(async (id) => {
-          console.log("remote id", id.toString());
-          if (id.toString().length == 36) {
-            console.log("Attempting to call " + id);
-            await call(id);
-          }
-        });
+				remote_id.subscribe(async (id) => {
+					console.log('remote id', id.toString());
+					if (id.toString().length == 36) {
+						console.log('Attempting to call ' + id);
+						await call(id);
+					}
+				});
 
+				async function call(peer_id) {
+					if (local_stream) {
+						var call = peer.call(peer_id, local_stream);
+						call.on('stream', async function (remoteStream) {
+							remote_video_element.srcObject = remoteStream;
 
-
-      async function call(peer_id) {
-        if (local_stream)
-        {
-          var call = peer.call(peer_id, local_stream);
-  call.on('stream', async function(remoteStream) {
-    remote_video_element.srcObject = remoteStream;
-
-              await remote_video_element.play();
-              remote_stream = remoteStream;
-  });
-        }
-        else {
-          error = "You can only call when you have a local stream. Make sure your webcam is enabled.";
-          return;
-        }
-      }
-
-
+							await remote_video_element.play();
+							remote_stream = remoteStream;
+						});
+					} else {
+						error =
+							'You can only call when you have a local stream. Make sure your webcam is enabled.';
+						return;
+					}
+				}
 			}
 		});
 	}
 
 	export let user;
+	export let ably_token;
+ var ably;
+  $: {
+    
+    if (ably_token && browser) {
+      console.log("can listen to ably channel now!");
+      let clientOptions = {
+          token: ably_token,
+          authUrl: `${window.location.origin}/ably_auth`,
+          ttl: 3600000,
+      };
+      ably = new Ably.Realtime.Promise(clientOptions);
+
+
+      ably.connection.on('connected', function () {
+          console.log('Connected to Ably');
+      });
+
+      ably.connection.on('failed', function (err) {
+          console.log('Failed to connect to Ably', err);
+      });
+
+      ably.connection.on('disconnected', function () {
+          console.log('Disconnected from Ably');
+      });
+
+      ably.connection.on('suspended', function () {
+          console.log('Suspended from Ably');
+      });
+
+
+      ably.connection.on('closed', function () {
+          console.log('Closed from Ably');
+      });
+
+      ably.channels.get('user_list').subscribe( function (msg) {
+          console.log('Received message: ' + msg);
+      });
+    }
+  }
+
+//   async function connect() {
+
+// // This channel is used for getting requests for video chats
+// let channel = ably.channels.get(user.email);
+// channel.subscribe((message) => {
+// console.log(`message received:, ${message.name} , ${message.data}`);
+// remote_id.set(message.data.remote_id);
+// });
+
+// let user_list_channel = await ably.channels.get('user_list');
+
+// user_list_channel.subscribe((message) => {
+//   console.log(`message received:, ${message.name} , ${message.data}`);
+// });
+// }
+
+//   if (ably) {
+//     await connect();
+//   }
+    
+  
+
 </script>
 
 {#if !user}
@@ -230,69 +274,64 @@
 	{/if}
 
 	<section class="section">
+		<div class="columns">
+			<div class="column">
+				<div class="box">
+					<div class="content">
+						<p class="title">Your Video</p>
 
-    <div class="columns">
-      <div class="column">
-        <div class="box">
-          <div class="content">
-            <p class="title">Your Video</p>
+						<video bind:this={local_video_element} class="column is-full is-dark">
+							<track kind="captions" />
+						</video>
+						<div class="field">
+							<div class="control">
+								<label class="label"
+									>Peer id
+									<input class="input" type="text" value={local_id} readonly />
+								</label>
+							</div>
 
+							<small>(Send this peer id to your chatting partner. It is your identifier.)</small>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="column">
+				<div class="box">
+					<div class="content">
+						<p class="title">Remote Video</p>
 
-            <video bind:this={local_video_element} class="column is-full is-dark">
-
-              <track kind="captions" />
-            </video>
-            <div class="field">
-                
-              <div class="control">
-                <label class="label">Peer id
-                <input class="input" type="text" value="{local_id}" readonly />
-              </label>
-              </div>
-            
-              <small>(Send this peer id to your chatting partner. It is your identifier.)</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="box">
-          <div class="content">
-            <p class="title">Remote Video</p>
-
-            <video bind:this={remote_video_element} class="column is-full is-dark">
-              <track kind="captions" />
-            </video>
-            <div class="field">
-                
-              <div class="control">
-                <label class="label">Remote ID
-                <input class="input" type="text" value="{$remote_id }" readonly />
-              </label>
-              </div>
-          </div>
-        </div>
-      </div>
-			
-
-			
+						<video bind:this={remote_video_element} class="column is-full is-dark">
+							<track kind="captions" />
+						</video>
+						<div class="field">
+							<div class="control">
+								<label class="label"
+									>Remote ID
+									<input class="input" type="text" value={$remote_id} readonly />
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
-  <section class="section">
-    <div class="card">
-      <div class="card-content">
-        <div class="content">
-          <!-- This will be an input collecting the remote_id that calls a local function when the call button is pressed -->
-          <div class="field">
-            
-            <div class="control"> <label class="label">Call Remote ID
-              <input class="input" type="text" placeholder="Remote ID" bind:value={$remote_id} />
-            </label>
-            </div>
-
-        </div>
-      </div>
-    </div>
-  </section>
-
+	<section class="section">
+		<div class="card">
+			<div class="card-content">
+				<div class="content">
+					<!-- This will be an input collecting the remote_id that calls a local function when the call button is pressed -->
+					<div class="field">
+						<div class="control">
+							<label class="label"
+								>Call Remote ID
+								<input class="input" type="text" placeholder="Remote ID" bind:value={$remote_id} />
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 {/if}

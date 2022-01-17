@@ -1,40 +1,45 @@
 import cookie from 'cookie';
 
 export async function handle({ request, resolve }) {
-	let cookies = cookie.parse(request.headers.cookie || '');
+	var cookies = cookie.parse(request.headers.cookie || '');
 
 	if (request.url.pathname === '/logout') {
-		cookies = null;
+		console.log("attemtping to logout");
+		cookies = {};
+		request.locals = {};
 	}
 
 	console.log('cookies before resolve function: ', JSON.stringify(cookies, null, 2));
 
 	try {
-	request.locals.user = JSON.parse(cookies.user);
+		request.locals= JSON.parse(cookies.data);
 	} catch (e) {
-		console.log('error parsing cookie: ', e);
-		request.locals.user = null;
+		console.log('error parsing cookie user');
+		request.locals = {};
 	}
 
-	console.log("before resolve function: " + JSON.stringify(request,null, 2));
+
+
+	console.log('before resolve function: ' + JSON.stringify(request.locals, null, 2));
 
 	const response = await resolve(request);
 
 	//code here happens after endpoint or page is called
-	console.log("after resolve function: " + JSON.stringify(request,null, 2));
+	console.log('after resolve function: ' + JSON.stringify(request.locals, null, 2));
 
-	response.headers['set-cookie'] = `user=${JSON.stringify(request.locals.user) || ''}; Path=/; HttpOnly`;
+	response.headers['set-cookie'] = `data=${
+		JSON.stringify(request.locals) || ''
+	}; Path=/; HttpOnly`;
 
 	return response;
 }
 
 export async function getSession(request) {
-
-	console.log("getSession function: " + JSON.stringify(request,null, 2));
+	console.log('getSession function: ' + JSON.stringify(request, null, 2));
 
 	return request.locals
 		? {
-				user: request.locals.user
+				data: request.locals
 		  }
-		: {user : null};
+		: { data : {} };
 }
