@@ -1,4 +1,4 @@
-import Ably from 'ably/browser/static/ably-webworker.min';
+
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request).catch
     (error => {
@@ -20,28 +20,38 @@ async function handleRequest(request) {
   console.log(request);
   let url = new URL(request.url);
   let user_identifier = url.searchParams.get('user_identifier');
-  var ably = Ably.Realtime({ key: ABLY_ADMIN_KEY });
+  //base64 encoding of ABLY_ADMIN_KEY
+   let encoded_key =  btoa(ABLY_ADMIN_KEY);
 
-  let channel = ably.channels.get('user_list');
-  channel.publish('message', {
-    text: `${user_identifier} has joined the server.`
-  });
-  
+    //basic authorization header
+    let auth_header = "Basic " + encoded_key;
 
-  // channel.publish('new_user', `${user_identifier}`,
-  // function(err) {
-  //   if (err) {
-  //     console.log('Error: ' + err.message);
-  //     return new Response('error' + err.message);
-  //   } else {
-  //     console.log('Success');
-  //     return new Response('worked');
-  //   }
-  // }
-  // );
+    //ably message payload
+    let payload = {
+      name: "new user",
+      data : user_identifier,
+    };
 
-  return new Response('worked');
+    //post message to channel user_list
+    let endpoint = 'https://rest.ably.io/channels/user_list/messages';
 
 
+    //fetch endpoint with payload and auth header
+    let response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': auth_header,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    //return response
+    let json = await response.json();
+
+    return new Response(JSON.stringify(json), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
 
 }

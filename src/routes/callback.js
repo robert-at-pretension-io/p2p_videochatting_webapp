@@ -27,16 +27,16 @@ export async function get({ url, locals }) {
 	let token = await get_ably_user_using_api_key(user_json.email, url.origin);
 	locals.ably_token = token;
 
-	// let able_add_channel_url =
-	// 	'https://make_ably_channel.robert-admin.workers.dev' + '/?user_identifier=' + user_json.email;
+	let able_add_channel_url =
+		'https://make_ably_channel.robert-admin.workers.dev' + '/?user_identifier=' + user_json.email;
 
-	// let ably_channel_add_response = await fetch(able_add_channel_url, {
-	// 	method: 'GET'
-	// });
+	let ably_channel_add_response = await fetch(able_add_channel_url, {
+		method: 'GET'
+	});
     // console.log("ably_channel_add_response", ably_channel_add_response.status);
-    // locals.ably_channel_add_response = await ably_channel_add_response.text();
+    locals.ably_channel_add_response = await ably_channel_add_response.json();
 
-    await create_ably_channel(user_json.email);
+    // await create_ably_channel(user_json.email);
 
 
 	console.log('In the callback endpoint: ' + JSON.stringify(locals, null, 2));

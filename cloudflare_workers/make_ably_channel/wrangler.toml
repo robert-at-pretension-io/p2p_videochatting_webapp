@@ -1,5 +1,5 @@
 name = "make_ably_channel"
-type = "webpack"
+type = "javascript"
 
 account_id = ""
 workers_dev = true
