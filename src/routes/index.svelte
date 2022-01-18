@@ -279,7 +279,7 @@
 					<div class="content">
 						<p class="title">Your Video</p>
 
-						<video bind:this={local_video_element} class="column is-full is-dark">
+						<video bind:this={local_video_element} playsInline autoplay muted class="column is-full is-dark">
 							<track kind="captions" />
 						</video>
 						<div class="field">
@@ -300,7 +300,7 @@
 					<div class="content">
 						<p class="title">Remote Video</p>
 
-						<video bind:this={remote_video_element} class="column is-full is-dark">
+						<video bind:this={remote_video_element} playsInline autoplay class="column is-full is-dark">
 							<track kind="captions" />
 						</video>
 						<div class="field">
