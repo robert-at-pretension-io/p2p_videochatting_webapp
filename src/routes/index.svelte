@@ -296,7 +296,7 @@
 					<div class="content">
 
 
-						<video bind:this={local_video_element} autoplay loop muted defaultMuted playsinline preload=true class="column is-full is-dark">
+						<video bind:this={local_video_element} autoplay loop muted defaultMuted playsinline preload=true controls class="column is-full is-dark">
 							<track kind="captions" />
 						</video>
 
@@ -309,7 +309,7 @@
 					<div class="content">
 
 
-						<video bind:this={remote_video_element} autoplay loop muted defaultMuted playsinline preload=true class="column is-full is-dark">
+						<video bind:this={remote_video_element} autoplay loop muted defaultMuted controls playsinline preload=true class="column is-full is-dark">
 							<track kind="captions" />
 						</video>
 
