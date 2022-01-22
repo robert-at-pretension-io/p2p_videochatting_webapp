@@ -266,7 +266,7 @@
 		</section>
 	{/if}
 	{#if $user_list.length > 0}
-	<section class="section is-info">
+	<section class="section">
 		<div class="container ">
 				<table class="table is-hoverable">
 					<thead>
@@ -296,7 +296,7 @@
 					<div class="content">
 
 
-						<video bind:this={local_video_element} playsInline autoplay muted class="column is-full is-dark">
+						<video bind:this={local_video_element} autoplay loop muted defaultMuted playsinline preload=true class="column is-full is-dark">
 							<track kind="captions" />
 						</video>
 
@@ -309,7 +309,7 @@
 					<div class="content">
 
 
-						<video bind:this={remote_video_element} playsInline autoplay class="column is-full is-dark">
+						<video bind:this={remote_video_element} autoplay loop muted defaultMuted playsinline preload=true class="column is-full is-dark">
 							<track kind="captions" />
 						</video>
 
