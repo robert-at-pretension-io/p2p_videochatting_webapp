@@ -18,6 +18,7 @@
 	var remote_video_element;
 	var remote_stream;
 	var error;
+	var call_initiating = false;
 	let remote_id = writable('');
 	let user_list = writable([]);
 
@@ -59,7 +60,7 @@
 				// media calls to others
 				peer.on('call', async function (call) {
 					console.log(`getting call from ${call.peer}`);
-					remote_id.set(call.peer);
+					call_initiating = true;
 					call.answer(local_stream); // Answer the call with an A/V stream.
 					call.on('stream', async function (remoteStream) {
 						remote_video_element.srcObject = remoteStream;
@@ -77,6 +78,7 @@
 				});
 
 				async function call(peer_id) {
+					call_initiating = true;
 					if (local_stream) {
 						var call = peer.call(peer_id, local_stream);
 						call.on('stream', async function (remoteStream) {
@@ -276,7 +278,7 @@
 					{#each $user_list as user}
 					<tr>
 						<td>{user.user.email}</td>
-						<td><button	class="button" on:click={() => {remote_id.set(user.id)}}> Click to Videochat 
+						<td><button	class="button" on:click={() => {remote_id.set(user.id); }}> Click to Videochat 
 						</button>	
 						</td>
 					</tr>
@@ -301,7 +303,7 @@
 					</div>
 				</div>
 			</div>
-			{#if $remote_id}
+			{#if call_initiating}
 			<div class="column is-half">
 				<div class="box">
 					<div class="content">
