@@ -8,10 +8,8 @@
 <script>
 	import { browser } from '$app/env';
 	import { writable } from 'svelte/store';
-	export const remote_id = writable('');
 	import {onMount} from 'svelte';
   import * as Ably from "ably";
-	import OnlineUserList from '$lib/online_user_list.svelte';
 
 	var local_id;
 	var local_video_element;
@@ -20,6 +18,8 @@
 	var remote_video_element;
 	var remote_stream;
 	var error;
+	let remote_id = writable('');
+	let user_list = writable([]);
 
 	if (browser) {
 		onMount(async () => {
@@ -96,12 +96,12 @@
 	export let user;
 	export let ably_token;
 	
-	var user_list = [];
  var ably;
  var attempts = 0;
+ var ably_connected = false;
   $: {
     
-    if (ably_token && browser && user && local_id) {
+    if (ably_token && browser && user && local_id && !ably_connected) {
     //   console.log("can listen to ably channel now!");
       let clientOptions = {
           token: ably_token,
@@ -115,6 +115,8 @@
           console.log('Connected to Ably');
 		  let user_list = ably.channels.get('user_list');
 		  user_list.publish({name: "new user", data: {user: user, id: local_id}});
+		  ably_connected = true;
+	  
       });
 
       ably.connection.on('failed', async function (err) {
@@ -147,8 +149,10 @@
           console.log('Received message: ' + msg);
 		  if (msg.data.user && msg.data.id) {
 			if (user.email != msg.data.user.email) {
-				user_list.push(msg.data);
-				console.log(`user list: ${JSON.stringify(user_list, null, 2)}`);
+				user_list.update(function (list) {
+					return [...list, msg.data];
+				});
+				console.log(`user list: ${JSON.stringify($user_list, null, 2)}`);
 		  }
 		}
       });
@@ -278,7 +282,27 @@
 			</article>
 		</section>
 	{/if}
-	<OnlineUserList {user_list}/>
+	<section class="section">
+		<h1 class="title">User List</h1>
+		<div class="container">
+			<table class="table is-hoverable">
+				<thead>
+					<tr>
+						<th>User</th>
+						<th>Click to Videochat</th>
+					</tr>
+				</thead>
+				{#each $user_list as user}
+				<tr>
+					<td>{user.user.email}</td>
+					<td><button	class="button" on:click={() => {remote_id.set(user.id)}}>
+					</button>	
+					</td>
+				</tr>
+				{/each}
+			</table>
+		</div>
+	</section>
 
 	<section class="section">
 		<div class="columns">
@@ -324,11 +348,11 @@
 			</div>
 		</div>
 	</section>
-	<section class="section">
+	<!-- <section class="section">
 		<div class="card">
 			<div class="card-content">
 				<div class="content">
-					<!-- This will be an input collecting the remote_id that calls a local function when the call button is pressed -->
+
 					<div class="field">
 						<div class="control">
 							<label class="label"
@@ -340,5 +364,5 @@
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> -->
 {/if}
