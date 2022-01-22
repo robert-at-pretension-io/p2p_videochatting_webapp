@@ -14,11 +14,12 @@ export async function get({url, params,locals}) {
     let tokenParams = {
         rnd: rnd,
         ttl: 3600000,
+        clientId: locals.user.email ? locals.user.email : 'unknown'
 
         
     };
-    let token = await ably.auth.createTokenRequest(tokenParams);
-    console.log("ASDFtoken", token);
+    let token = await ably.auth.authorize(tokenParams);
+    console.log(`Trying to auth with clientId ${locals.user.email} token: ${token.token}`);
     locals.ably_token = token;
     return {
         body: token,

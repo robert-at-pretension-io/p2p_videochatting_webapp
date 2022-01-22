@@ -1,4 +1,4 @@
-name = "make_ably_channel"
+name = "post_to_ably_channel"
 type = "javascript"
 
 account_id = ""

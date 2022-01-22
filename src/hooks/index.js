@@ -3,11 +3,7 @@ import cookie from 'cookie';
 export async function handle({ request, resolve }) {
 	var cookies = cookie.parse(request.headers.cookie || '');
 
-	if (request.url.pathname === '/logout') {
-		console.log("attemtping to logout");
-		cookies = {};
-		request.locals = {};
-	}
+
 
 	console.log('cookies before resolve function: ', JSON.stringify(cookies, null, 2));
 
@@ -23,6 +19,13 @@ export async function handle({ request, resolve }) {
 	console.log('before resolve function: ' + JSON.stringify(request.locals, null, 2));
 
 	const response = await resolve(request);
+
+
+	if (request.url.pathname === '/logout') {
+		console.log("attemtping to logout");
+		cookies = {};
+		request.locals = {};
+	}
 
 	//code here happens after endpoint or page is called
 	console.log('after resolve function: ' + JSON.stringify(request.locals, null, 2));

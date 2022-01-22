@@ -54,8 +54,23 @@
 					</span>
 					<span>Account</span>
 				</span>
+        
 			</button>
+      
 		</div>
+    <div class="navbar-item">
+      <!-- Button for going to discord server -->
+      
+        <a  class="button is-warning is-fullwidth is-outlined" href="https://discord.gg/RJupBseDyz" target="_blank">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fab fa-discord" />
+            </span>
+            <span>Chat on Discord</span>
+          </span>
+        </a>
+      
+    </div>
     {/if}
 		<LoginHeader {user} />
 	</div>

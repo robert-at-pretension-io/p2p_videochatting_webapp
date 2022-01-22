@@ -7,10 +7,11 @@
 
 <script>
 	import { browser } from '$app/env';
-	import { createEventDispatcher, onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	export const remote_id = writable('');
+	import {onMount} from 'svelte';
   import * as Ably from "ably";
+	import OnlineUserList from '$lib/online_user_list.svelte';
 
 	var local_id;
 	var local_video_element;
@@ -66,8 +67,8 @@
 					});
 				});
 				remote_id.subscribe(async (id) => {
-					console.log('remote id', id.toString());
 					if (id.toString().length == 36) {
+
 						console.log('Attempting to call ' + id);
 						await call(id);
 					}
@@ -94,11 +95,14 @@
 
 	export let user;
 	export let ably_token;
+	
+	var user_list = [];
  var ably;
+ var attempts = 0;
   $: {
     
-    if (ably_token && browser) {
-      console.log("can listen to ably channel now!");
+    if (ably_token && browser && user && local_id) {
+    //   console.log("can listen to ably channel now!");
       let clientOptions = {
           token: ably_token,
           authUrl: `${window.location.origin}/ably_auth`,
@@ -109,10 +113,21 @@
 
       ably.connection.on('connected', function () {
           console.log('Connected to Ably');
+		  let user_list = ably.channels.get('user_list');
+		  user_list.publish({name: "new user", data: {user: user, id: local_id}});
       });
 
-      ably.connection.on('failed', function (err) {
+      ably.connection.on('failed', async function (err) {
           console.log('Failed to connect to Ably', err);
+		  if (attempts < 5){
+		  let token = await fetch('/ably_auth', {
+			method: 'GET',
+		  });
+		  let token_data = await token.json();
+		  console.log(`current attempt ${attempts}, token data: ${JSON.stringify(token_data, null, 2)}`);
+		  ably_token = token_data;
+		  attempts += 1;
+		}
       });
 
       ably.connection.on('disconnected', function () {
@@ -130,29 +145,21 @@
 
       ably.channels.get('user_list').subscribe( function (msg) {
           console.log('Received message: ' + msg);
+		  if (msg.data.user && msg.data.id) {
+			if (user.email != msg.data.user.email) {
+				user_list.push(msg.data);
+				console.log(`user list: ${JSON.stringify(user_list, null, 2)}`);
+		  }
+		}
+      });
+
+	  ably.channels.get(`direct_message:${user.email}`).subscribe( function (msg) {
+          console.log('Received direct message: ' + msg);
       });
     }
   }
 
-//   async function connect() {
 
-// // This channel is used for getting requests for video chats
-// let channel = ably.channels.get(user.email);
-// channel.subscribe((message) => {
-// console.log(`message received:, ${message.name} , ${message.data}`);
-// remote_id.set(message.data.remote_id);
-// });
-
-// let user_list_channel = await ably.channels.get('user_list');
-
-// user_list_channel.subscribe((message) => {
-//   console.log(`message received:, ${message.name} , ${message.data}`);
-// });
-// }
-
-//   if (ably) {
-//     await connect();
-//   }
     
   
 
@@ -271,6 +278,7 @@
 			</article>
 		</section>
 	{/if}
+	<OnlineUserList {user_list}/>
 
 	<section class="section">
 		<div class="columns">

@@ -1,19 +1,22 @@
 {
   "private": true,
-  "name": "make_ably_channel",
+  "name": "user_list",
   "version": "1.0.0",
   "description": "A template for kick starting a Cloudflare Workers project",
-  "main": "index.js",
+  "module": "./dist/shim.mjs",
   "scripts": {
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write '**/*.{js,css,json,md}'"
   },
   "author": "Robert Pahel-Short <robert@pretension.io>",
   "license": "MIT",
   "devDependencies": {
-    "prettier": "^1.18.2"
+    "copy-webpack-plugin": "^7.0.0",
+    "prettier": "^1.19.1",
+    "webpack": "^5.15.0",
+    "webpack-cli": "^4.3.1"
   },
   "dependencies": {
-    "ably": "^1.2.17"
   }
 }

@@ -1,0 +1,22 @@
+name = "user_list"
+# type = "javascript" is required to use the `[build]` section
+type = "javascript"
+account_id = ""
+workers_dev = true
+route = ""
+zone_id = ""
+compatibility_date = "2022-01-19"
+
+[build]
+command = "npm install && npm run build"
+[build.upload]
+# The "modules" upload format is required for all projects that export a Durable Object class.
+format = "modules"
+main = "./shim.mjs"
+
+[durable_objects]
+bindings = [{name = "USERLIST", class_name = "UserList"}]
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["UserList"]

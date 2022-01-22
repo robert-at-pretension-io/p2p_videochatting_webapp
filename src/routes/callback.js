@@ -27,14 +27,31 @@ export async function get({ url, locals }) {
 	let token = await get_ably_user_using_api_key(user_json.email, url.origin);
 	locals.ably_token = token;
 
-	let able_add_channel_url =
-		'https://make_ably_channel.robert-admin.workers.dev' + '/?user_identifier=' + user_json.email;
+	//add user to user_list which will be used to send messages to the user
+	// let base_url = "https://user_list.robert-admin.workers.dev/";
+	// let user_list_url = `${base_url}/add?user_id=${user_json.email}`;
+	// let user_list = await fetch(user_list_url);
+	// locals.user_list = await user_list.json();
 
-	let ably_channel_add_response = await fetch(able_add_channel_url, {
-		method: 'GET'
-	});
+	// let able_post_to_channel =
+	// 	'https://post_to_ably_channel.robert-admin.workers.dev';
+
+	// 	let post_data = { channel_name : "user_list" ,
+	// 		payload : {
+	// 			name : "new user",
+	// 			data: user_json.email
+	// 		}
+	// 	};
+
+	// let ably_channel_add_response = await fetch(able_post_to_channel, {
+	// 	method: 'POST',
+	// 	body: JSON.stringify(post_data),
+	// 	headers: {
+	// 		'Content-Type': 'application/json'
+	// 	}
+	// });
     // console.log("ably_channel_add_response", ably_channel_add_response.status);
-    locals.ably_channel_add_response = await ably_channel_add_response.json();
+    // locals.ably_channel_add_response = await ably_channel_add_response.json();
 
     // await create_ably_channel(user_json.email);
 
@@ -49,17 +66,6 @@ export async function get({ url, locals }) {
 	};
 }
 
-async function create_ably_channel(user_identifier) {
-
-    const ably = new Ably.Realtime.Promise({key: ably_admin_key});
-
-    let channel_name = `${user_identifier}`;
-    let channel = await ably.channels.get(channel_name);
-    await channel.publish('message', {
-        text: `${user_identifier} has joined the server.`
-    });
-    
-}
 
 
 // TODO : Should probably use something other than the user's email as an identifier
