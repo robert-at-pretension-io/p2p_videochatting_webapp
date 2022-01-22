@@ -58,6 +58,8 @@
 				});
 				// media calls to others
 				peer.on('call', async function (call) {
+					console.log(`getting call from ${call.peer}`);
+					remote_id.set(call.peer);
 					call.answer(local_stream); // Answer the call with an A/V stream.
 					call.on('stream', async function (remoteStream) {
 						remote_video_element.srcObject = remoteStream;
@@ -234,29 +236,8 @@
 						If you encounter a bad interaction, you can report it. This is not like other reporting
 						processes.
 
-						<strong> Reporting an interaction will kick off a remediation process. </strong>
-						<br />
-						<br />
-						This process consists of the following steps:
-						<br />
-						<div class="content">
-							<ol>
-								<li>
-									Both members will be notified of the bad interaction. Both accounts are
-									temporarily blocked from interacting with others until they either resolve the
-									issue or agree to the remediation process.
-								</li>
-								<li>
-									The video of the interaction will be reviewed by 3 community members and see if
-									the interaction conforms to the rules of the server at the time of interaction.
-								</li>
-								<li>
-									If the reported bad interaction does not conform to the global and server rules, a
-									redemption will be required by the offender to resolve the issue. Each server must
-									define its own redemption process.
-								</li>
-							</ol>
-						</div>
+						<strong> Reporting an interaction will kick off a remediation process involving both parties and community moderators. </strong>
+						
 					</div>
 				</article>
 			</div>
@@ -282,87 +263,59 @@
 			</article>
 		</section>
 	{/if}
-	<section class="section">
-		<h1 class="title">User List</h1>
-		<div class="container">
-			<table class="table is-hoverable">
-				<thead>
+	{#if $user_list.length > 0}
+	<section class="section is-info">
+		<div class="container ">
+				<table class="table is-hoverable">
+					<thead>
+						<tr>
+							<th>User</th>
+							<th>Click to Videochat</th>
+						</tr>
+					</thead>
+					{#each $user_list as user}
 					<tr>
-						<th>User</th>
-						<th>Click to Videochat</th>
+						<td>{user.user.email}</td>
+						<td><button	class="button" on:click={() => {remote_id.set(user.id)}}> Click to Videochat 
+						</button>	
+						</td>
 					</tr>
-				</thead>
-				{#each $user_list as user}
-				<tr>
-					<td>{user.user.email}</td>
-					<td><button	class="button" on:click={() => {remote_id.set(user.id)}}>
-					</button>	
-					</td>
-				</tr>
-				{/each}
-			</table>
+					{/each}
+				</table>
 		</div>
+
 	</section>
+	{/if}
 
 	<section class="section">
 		<div class="columns">
-			<div class="column">
+			<div class="column is-half">
 				<div class="box">
 					<div class="content">
-						<p class="title">Your Video</p>
+
 
 						<video bind:this={local_video_element} playsInline autoplay muted class="column is-full is-dark">
 							<track kind="captions" />
 						</video>
-						<div class="field">
-							<div class="control">
-								<label class="label"
-									>Peer id
-									<input class="input" type="text" value={local_id} readonly />
-								</label>
-							</div>
 
-							<small>(Send this peer id to your chatting partner. It is your identifier.)</small>
-						</div>
 					</div>
 				</div>
 			</div>
-			<div class="column">
+			{#if $remote_id}
+			<div class="column is-half">
 				<div class="box">
 					<div class="content">
-						<p class="title">Remote Video</p>
+
 
 						<video bind:this={remote_video_element} playsInline autoplay class="column is-full is-dark">
 							<track kind="captions" />
 						</video>
-						<div class="field">
-							<div class="control">
-								<label class="label"
-									>Remote ID
-									<input class="input" type="text" value={$remote_id} readonly />
-								</label>
-							</div>
-						</div>
+
 					</div>
 				</div>
 			</div>
+			{/if}
 		</div>
 	</section>
-	<!-- <section class="section">
-		<div class="card">
-			<div class="card-content">
-				<div class="content">
 
-					<div class="field">
-						<div class="control">
-							<label class="label"
-								>Call Remote ID
-								<input class="input" type="text" placeholder="Remote ID" bind:value={$remote_id} />
-							</label>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section> -->
 {/if}
