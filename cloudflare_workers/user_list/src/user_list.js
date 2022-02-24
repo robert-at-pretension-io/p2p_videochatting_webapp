@@ -28,6 +28,9 @@ module.exports = class UserList {
 
 
     switch (url.pathname) {
+
+      case "/list":
+        break;
       case "/add":
 
         console.log(`adding user_id ${user_id} to user_list`);
@@ -48,10 +51,11 @@ module.exports = class UserList {
       case "/":
         // Just serve the current value. No storage calls needed!
         break;
+      
       default:
-        return new Response("Not found", { status: 404 });
+        return new Response({"message": "not found"}, { status: 404 });
     }
-    console.log(`at this point in ttime the user_list has the value ${JSON.stringify(this.user_list.get(user_id))} for user_id ${user_id}`);
+    console.log(`at this point in time the user_list has the value ${JSON.stringify(this.user_list.get(user_id))} for user_id ${user_id}`);
 
     let response = JSON.stringify(Array.from(this.user_list));
     console.log(`response is ${response}`);

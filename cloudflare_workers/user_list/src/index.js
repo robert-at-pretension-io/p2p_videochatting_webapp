@@ -14,8 +14,16 @@ exports.handlers = {
 }
 
 async function handleRequest(request, env) {
+  
+  // This is where we could have different instances of the UserList durable object (this will be important when the application scales)
   let id = env.USERLIST.idFromName('A')
   let obj = env.USERLIST.get(id)
+
+  // If the requested url is a favicon.ico return 404
+  if (request.url.endsWith('favicon.ico')) {
+    return new Response(null, { status: 404 })
+  }
+
   let resp = await obj.fetch(request)
   let user_list = await resp.json();
 

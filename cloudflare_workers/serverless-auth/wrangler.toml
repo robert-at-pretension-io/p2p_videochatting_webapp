@@ -1,0 +1,27 @@
+type = "webpack"
+# account_id = ""
+workers_dev = true
+
+name = "serverless-auth"
+account_id = "023c1fd2bbd4cade36478356d794e484"
+
+# this should be replaced with your own kv namespace if you are deploying a
+# version of this project! see "setup" in the readme.
+kv-namespaces = [
+  { binding = "AUTH_STORE", id = "25032d4cc7af4f46848581e8b638da43", preview_id = "bce76a290c0c48918704debc8c63ec28"}
+]
+compatibility_date = "2022-01-25"
+
+#[site]
+#bucket = './public'
+#entry-point = "."
+
+[vars]
+AUTH0_CALLBACK_URL = "https://serverless-auth.robert-admin.workers.dev/auth"
+AUTH0_CLIENT_ID = "euhEPspBJreE2mcTuCujf9zuChOnngl1"
+AUTH0_DOMAIN = "https://dev-ggk93vhy.us.auth0.com"
+
+
+#[secrets]
+#AUTH0_CLIENT_SECRET
+#SALT

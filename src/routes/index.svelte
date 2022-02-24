@@ -68,6 +68,9 @@
 						await remote_video_element.play();
 						remote_stream = remoteStream;
 					});
+					call.on("error" , function(err){
+						console.log(JSON.stringify(err, null, 2));
+					});
 				});
 				remote_id.subscribe(async (id) => {
 					if (id.toString().length == 36) {
@@ -81,6 +84,9 @@
 					call_initiating = true;
 					if (local_stream) {
 						var call = peer.call(peer_id, local_stream);
+						call.on("error" , function(err){
+						console.log(JSON.stringify(err, null, 2));
+					});
 						call.on('stream', async function (remoteStream) {
 							remote_video_element.srcObject = remoteStream;
 
